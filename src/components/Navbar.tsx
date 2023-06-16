@@ -4,12 +4,15 @@ import SearchIcon from '@mui/icons-material/Search';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import AddIcon from '@mui/icons-material/Add';
 
+interface INavbar {
+    handleClickOpen: () => void
+}
 
-const Navbar = () => {
+const Navbar = ({ handleClickOpen }: INavbar) => {
     return (
         <Box  boxShadow="0px 13px 10px -15px #111">
             
-        <Box p="10px 50px" display="flex" 
+        <Box p="10px 70px" display="flex" 
             justifyContent="space-between"
         >
             <Box display="flex" alignItems="center" gap={2} > 
@@ -44,7 +47,7 @@ const Navbar = () => {
                 <Box sx={{ cursor: 'pointer'}}>
                     <FilterAltOutlinedIcon sx={{ fontSize: "30px"}} />
                 </Box>
-                <Box >
+                <Box onClick={ handleClickOpen }>
                     <Button variant="text" sx={{ display:"flex", alignItems:"center", border: '1px solid rgba(0, 0, 0, 0.2)' ,
                         color: 'black'
                     }}>
