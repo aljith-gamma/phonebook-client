@@ -5,7 +5,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { config } from "@/config/config";
 import { useRouter } from "next/navigation";
 import Link from "next/link";

@@ -1,5 +1,8 @@
+import { config } from "@/config/config";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, TextField } from "@mui/material";
-import { ChangeEvent, useState } from "react";
+import axios from "axios";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 interface ICreateContact {
     handleClose: () => void,
@@ -14,6 +17,8 @@ const CreateContact = ({ handleClose, open }: ICreateContact) => {
         label: '' 
     })
 
+    const [avatar, setAvatar] = useState<null | File>(null);
+
     const handleChangeSelect = (event: SelectChangeEvent) => {
         setData({
             ...data,
@@ -27,16 +32,121 @@ const CreateContact = ({ handleClose, open }: ICreateContact) => {
             [event.target.name]: event.target.value
         })
     }
+
+    const closeHandler = () => {
+        setData({
+            name: '',
+            phone: '',
+            address: '',
+            label: '' 
+        })
+        setAvatar(null);
+        handleClose();
+    }
+
+    const avatarHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        if(e.target.files && e.target.files[0]){
+            const image = e.target.files[0];
+            setAvatar(image);
+        }
+    }
+
+    const formDataHandler = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        
+        try {
+            console.log(avatar);
+            const formData = new FormData();
+            if(avatar){
+                formData.append('avatar', avatar);
+            }
+            formData.append('name', data.name);
+            formData.append('phone', data.phone);
+            formData.append('address', data.address);
+            formData.append('label', data.label);
+
+            const token = localStorage.getItem('token') || 'token';
+            const res = await axios.post(`${config.API_URL}/phonebook/create`, formData, {
+                headers: {
+                    'Authorization': token
+                }
+            })
+            console.log(res);
+            if(res?.data?.status){
+                toast.success(res.data.message, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                
+                setTimeout(() => {
+                    handleClose();
+                }, 2000);
+            }else {
+                toast.warning(res.data.message, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            }
+        } catch (err: any) {
+            console.log(err?.response?.data?.message);
+            console.log(err);
+            if(err?.response?.data?.message === 'Forbidden resource'){
+                console.log('Please login again!');
+                return;
+            }
+            if(err?.response?.data?.message){
+                toast.error(err.response.data.message[0], {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            }
+        }
+
+            // const res = await axios.post(`${config.API_URL}/auth/signup`, { ...data });
+            // console.log(res?.data);
+            // if(res?.data?.status){
+            //     toast.success(res.data.message, {
+            //         position: "top-center",
+            //         autoClose: 5000,
+            //         hideProgressBar: false,
+            //         closeOnClick: true,
+            //         pauseOnHover: true,
+            //         progress: undefined,
+            //         theme: "light",
+            //     });
+            //     const token = res.data.token;
+            //     localStorage.setItem('token', token);
+            //     setTimeout(() => {
+            //         router.push('/');
+            //     }, 2000)
+            // }
+    }
   
 
   return (
     <div>
-        <Dialog open={open} onClose={handleClose} >
+        <Dialog open={open} onClose={closeHandler} >
+            <ToastContainer />
             <Box sx={{ width: "600px"}}>
                 <DialogTitle fontSize="28px" textAlign="center">Create new contact</DialogTitle>
                 <DialogContent >
-                    <form >
-                        <Stack spacing={2}>
+                    <form onSubmit={ formDataHandler }>
+                        <Stack spacing={1}>
                             <TextField
                                 autoFocus
                                 margin="dense"
@@ -46,19 +156,8 @@ const CreateContact = ({ handleClose, open }: ICreateContact) => {
                                 fullWidth
                                 variant="standard"
                                 onChange={ handleChange }
+                                required={true}
                             />
-
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                name="email"
-                                label="Email"
-                                type="email"
-                                fullWidth
-                                variant="standard"
-                                onChange={ handleChange }
-                            />
-
 
                             <TextField
                                 autoFocus
@@ -69,6 +168,7 @@ const CreateContact = ({ handleClose, open }: ICreateContact) => {
                                 fullWidth
                                 variant="standard"
                                 onChange={ handleChange }
+                                required={true}
                             />
 
                             <TextField
@@ -80,16 +180,17 @@ const CreateContact = ({ handleClose, open }: ICreateContact) => {
                                 fullWidth
                                 variant="standard"
                                 onChange={ handleChange }
+                                required={true}
                             />
 
                             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                                <InputLabel id="demo-simple-select-standard-label">Age</InputLabel>
+                                <InputLabel id="demo-simple-select-standard-label">Label</InputLabel>
                                 <Select
                                     labelId="demo-simple-select-standard-label"
                                     id="demo-simple-select-standard"
                                     value={data.label}
                                     onChange={handleChangeSelect}
-                                    label="Label"
+                                    required={true}
                                 >
                                     <MenuItem value="">
                                         <em>None</em>
@@ -101,11 +202,12 @@ const CreateContact = ({ handleClose, open }: ICreateContact) => {
                                 </Select>
                             </FormControl>
                             <Box>
-                                <TextField label="Avatar" type="file" />
+                                <InputLabel>Avatar</InputLabel>
+                                <TextField type="file" onChange={ avatarHandler } />
                             </Box>
 
                             <Box>
-                                <Button size="large" variant="contained" sx={{ mt: "20px", width:"100%"}}>
+                                <Button type="submit" size="large" variant="contained" sx={{ mt: "20px", width:"100%"}}>
                                     Create Contact
                                 </Button>
                             </Box>
@@ -113,7 +215,7 @@ const CreateContact = ({ handleClose, open }: ICreateContact) => {
                     </form>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={ closeHandler }>Cancel</Button>
                 </DialogActions>
             </Box>
         </Dialog>
