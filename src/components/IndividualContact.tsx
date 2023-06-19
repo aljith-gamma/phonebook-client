@@ -8,10 +8,11 @@ import { useState } from "react";
 
 interface IGenerateImage {
     avatar: string | null;
-    name: string
+    name: string;
+    ind: number
 }
 
-const GenerateImage = ({ avatar, name}: IGenerateImage) => {
+const GenerateImage = ({ avatar, name, ind}: IGenerateImage) => {
     const url = avatar && `http://localhost:3001/web/${avatar.split('/').pop()}`;
     if(url){
         console.log(avatar);
@@ -48,7 +49,8 @@ const GenerateImage = ({ avatar, name}: IGenerateImage) => {
                 b: 'pink'
             }
         ]
-        const index = Math.floor(Math.random() * colors.length);
+        
+        const index = ind % colors.length;
         return (
             <Box width={43} height={43} borderRadius="50%" overflow="hidden"
                 boxShadow="rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px"
@@ -63,7 +65,7 @@ const GenerateImage = ({ avatar, name}: IGenerateImage) => {
     }
 }
 
-const IndividualContact = ({ name, avatar_url, phone, isBookmarked } : IContact) => {
+const IndividualContact = ({ name, avatar_url, phone, isBookmarked, index } : IContact) => {
     const [ show, setShow ] = useState(false);
     const handleShow = (val: boolean) => {
         setShow(val);
@@ -80,7 +82,7 @@ const IndividualContact = ({ name, avatar_url, phone, isBookmarked } : IContact)
             onMouseOut={() => handleShow(false)}
         >
             <Box display="flex" alignItems="center" gap={5}>
-                <GenerateImage avatar={ avatar_url} name={ name } />
+                <GenerateImage avatar={ avatar_url} name={ name } ind={index} />
                 <Typography fontSize="18px">{ name }</Typography>
             </Box>
 

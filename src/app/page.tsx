@@ -14,7 +14,8 @@ export interface IContact {
   phone: string;
   address: string;
   label: string;
-  isBookmarked: boolean
+  isBookmarked: boolean;
+  index: number;
 }
 
 export default function Home() {
@@ -58,7 +59,7 @@ export default function Home() {
     <Box>
         <Navbar handleClickOpen={handleClickOpen} />
         <CreateContact handleClose={handleClose} refresh={ refresh } open={open} />
-        <Container maxWidth="lg" sx={{ mt: "20px"}}>
+        <Container maxWidth="lg" sx={{ my: "90px"}}>
             <Box display="grid" gridTemplateColumns="1fr 1fr">
               <Typography color="#545252">Name</Typography>
               <Typography color="#545252">Phone Number</Typography>
@@ -69,8 +70,8 @@ export default function Home() {
             <Box sx={{ mt: "10px"}}>
               <Stack spacing={2}>
                 { !contacts.length ? <h1>No contacts</h1> : (
-                  contacts.map((contact) => {
-                    return <IndividualContact key={contact.id} { ...contact } />
+                  contacts.map((contact, i) => {
+                    return <IndividualContact key={contact.id} { ...contact } index={ i } />
                   })
                   )}
               </Stack>
