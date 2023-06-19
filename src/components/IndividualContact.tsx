@@ -15,7 +15,6 @@ interface IGenerateImage {
 const GenerateImage = ({ avatar, name, ind}: IGenerateImage) => {
     const url = avatar && `http://localhost:3001/web/${avatar.split('/').pop()}`;
     if(url){
-        console.log(avatar);
         return (
             <Box width={43} height={43} borderRadius="50%" overflow="hidden"
                 boxShadow="rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px"

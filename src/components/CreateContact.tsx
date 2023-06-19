@@ -84,8 +84,9 @@ const CreateContact = ({ handleClose, open, refresh }: ICreateContact) => {
                     theme: "light",
                 });
                 
+                refresh();
                 setTimeout(() => {
-                    refresh();
+                    handleClose();
                 }, 2000);
             }else {
                 toast.warning(res.data.message, {
