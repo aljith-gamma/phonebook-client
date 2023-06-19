@@ -19,11 +19,12 @@ export interface IContact {
 
 export default function Home() {
   const [open, setOpen] = useState(false);
+  const [load, setLoad] = useState(false);
   const [contacts, setContacts] = useState<IContact[]>([]);
 
   useEffect(() => {
     fetchContacts();
-  }, [])
+  }, [load])
 
   const fetchContacts = async () => {
     try {
@@ -49,10 +50,14 @@ export default function Home() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const refresh = () => {
+    setLoad((val) => !val);
+  }
   return (
     <Box>
         <Navbar handleClickOpen={handleClickOpen} />
-        <CreateContact handleClose={handleClose} open={open} />
+        <CreateContact handleClose={handleClose} refresh={ refresh } open={open} />
         <Container maxWidth="lg" sx={{ mt: "20px"}}>
             <Box display="grid" gridTemplateColumns="1fr 1fr">
               <Typography color="#545252">Name</Typography>

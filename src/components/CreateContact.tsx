@@ -6,10 +6,11 @@ import { ToastContainer, toast } from "react-toastify";
 
 interface ICreateContact {
     handleClose: () => void,
-    open: boolean
+    open: boolean,
+    refresh: () => void
 }
 
-const CreateContact = ({ handleClose, open }: ICreateContact) => {
+const CreateContact = ({ handleClose, open, refresh }: ICreateContact) => {
     const [ data, setData ] = useState({
         name: '',
         phone: '',
@@ -84,7 +85,7 @@ const CreateContact = ({ handleClose, open }: ICreateContact) => {
                 });
                 
                 setTimeout(() => {
-                    handleClose();
+                    refresh();
                 }, 2000);
             }else {
                 toast.warning(res.data.message, {

@@ -16,7 +16,7 @@ const GenerateImage = ({ avatar, name}: IGenerateImage) => {
     if(url){
         console.log(avatar);
         return (
-            <Box width={45} height={45} borderRadius="50%" overflow="hidden"
+            <Box width={43} height={43} borderRadius="50%" overflow="hidden"
                 boxShadow="rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px"
                 display="flex" justifyContent="center" alignItems="center"
             >
@@ -50,7 +50,7 @@ const GenerateImage = ({ avatar, name}: IGenerateImage) => {
         ]
         const index = Math.floor(Math.random() * colors.length);
         return (
-            <Box width={45} height={45} borderRadius="50%" overflow="hidden"
+            <Box width={43} height={43} borderRadius="50%" overflow="hidden"
                 boxShadow="rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px"
                 display="flex" justifyContent="center" alignItems="center"
                 color={colors[index].c} bgcolor={colors[index].b}
