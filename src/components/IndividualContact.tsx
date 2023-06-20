@@ -10,6 +10,7 @@ import EditContact from "./EditContact";
 import DialogBox from "./DialogBox";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 interface IGenerateImage {
     avatar: string | null;
@@ -75,6 +76,7 @@ const IndividualContact = ( props : IContact) => {
     const [ show, setShow ] = useState(false);
     const [open, setOpen] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
+    const router = useRouter();
 
     const handleClickOpen = () => {
       setOpen(true);
@@ -155,6 +157,7 @@ const IndividualContact = ( props : IContact) => {
             }}
             onMouseOver={() => handleShow(true)}
             onMouseOut={() => handleShow(false)}
+            onClick={() => router.push(`/${id}`) }
         >
             <DialogBox open={ openDialog } handleClose={ dialogBoxHandler } 
                 message="Do you want to delete this contact?" color="error"
