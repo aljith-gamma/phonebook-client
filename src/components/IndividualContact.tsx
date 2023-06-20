@@ -7,6 +7,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from "react";
 import { config } from "@/config/config";
 import EditContact from "./EditContact";
+import DialogBox from "./DialogBox";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 interface IGenerateImage {
     avatar: string | null;
@@ -71,6 +74,7 @@ const IndividualContact = ( props : IContact) => {
 
     const [ show, setShow ] = useState(false);
     const [open, setOpen] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
 
     const handleClickOpen = () => {
       setOpen(true);
@@ -89,6 +93,58 @@ const IndividualContact = ( props : IContact) => {
         bookmarkHandler(id, isBookmarked);
     }
 
+    const dialogBoxHandler = () => {
+        setOpenDialog(false);
+        handleShow(false);
+    }
+
+    const dialogBoxOpen = () => {
+        setOpenDialog(true);
+    }
+
+    const deleteContact = async () => {
+        try {
+            const token = localStorage.getItem('token') || 'token';
+            const res = await axios.delete(`${config.API_URL}/phonebook/${id}`,{
+              headers: {
+                "Authorization": `Bearer ${token}`
+              }
+            })
+            console.log(res);
+            if(res?.data?.status){
+                toast.success(res.data.message, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                
+                refresh();
+                dialogBoxHandler();
+            }else {
+                dialogBoxHandler();
+                toast.warning(res.data.message, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            }
+          } catch (err: any) {
+            console.log(err);
+            if(err?.response?.data?.message === 'Forbidden resource'){
+                console.log('Please login again!');
+                return;
+            }
+          }
+    }
+
     return (
         <Box display="grid" gridTemplateColumns="1fr 1fr" alignItems="center"
             borderBottom="1px solid rgba(0, 0, 0, 0.2)" py={1} px={4} 
@@ -100,6 +156,10 @@ const IndividualContact = ( props : IContact) => {
             onMouseOver={() => handleShow(true)}
             onMouseOut={() => handleShow(false)}
         >
+            <DialogBox open={ openDialog } handleClose={ dialogBoxHandler } 
+                message="Do you want to delete this contact?" color="error"
+                btnText="Delete" agreeHandler={deleteContact}
+            />
             <Box display="flex" alignItems="center" gap={5}>
                 <GenerateImage avatar={ avatar_url} name={ name } ind={index} />
                 <Typography fontSize="18px">{ name }</Typography>
@@ -145,10 +205,13 @@ const IndividualContact = ( props : IContact) => {
                             "&:hover": {
                                 color: 'red'
                             }
-                        }}/> 
+                        }}
+                        onClick={ dialogBoxOpen }
+                        /> 
                     </Box> 
                 </Box> }  
             </Box>
+            <ToastContainer />
         </Box>
     )
 }

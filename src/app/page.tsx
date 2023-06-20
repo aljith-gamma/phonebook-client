@@ -103,6 +103,8 @@ export default function Home() {
     setLoad((val) => !val);
   }
 
+
+
   const pageChangeHandler = (curPage: number) => {
     fetchContacts(curPage);
     setPage(curPage);
@@ -127,7 +129,7 @@ export default function Home() {
                   contacts.map((contact, i) => {
                     return <IndividualContact key={contact.id} { ...contact } index={ i } refresh={refresh} bookmarkHandler={bookmarkHandler} />
                   })
-                  )}
+                )}
               </Stack>
             </Box>
 
