@@ -67,7 +67,7 @@ const GenerateImage = ({ avatar, name, ind}: IGenerateImage) => {
 }
 
 const IndividualContact = ( props : IContact) => {
-    const { name, avatar_url, phone, isBookmarked, index, refresh } = props;
+    const { name, avatar_url, phone, isBookmarked, index, refresh, bookmarkHandler, id } = props;
 
     const [ show, setShow ] = useState(false);
     const [open, setOpen] = useState(false);
@@ -83,6 +83,10 @@ const IndividualContact = ( props : IContact) => {
 
     const handleShow = (val: boolean) => {
         setShow(val);
+    }
+
+    const changeBookmark = () => {
+        bookmarkHandler(id, isBookmarked);
     }
 
     return (
@@ -114,13 +118,17 @@ const IndividualContact = ( props : IContact) => {
                                 "&:hover": {
                                     color: '#4287f5'
                                 }
-                            }} /> : 
+                            }}
+                            onClick={ changeBookmark }
+                            /> : 
                             <BookmarkAddOutlinedIcon sx={{ 
                                 cursor: 'pointer',
                                 "&:hover": {
                                     color: '#4287f5'
                                 }
-                            }}/> 
+                            }}
+                            onClick={ changeBookmark }
+                            /> 
                         }
                     </Box>
                     <Box display="flex" gap={2}>
@@ -137,9 +145,9 @@ const IndividualContact = ( props : IContact) => {
                             "&:hover": {
                                 color: 'red'
                             }
-                        }}/>
-                    </Box>
-                </Box> }
+                        }}/> 
+                    </Box> 
+                </Box> }  
             </Box>
         </Box>
     )

@@ -100,7 +100,6 @@ const CreateContact = ({ handleClose, open, refresh }: ICreateContact) => {
                 });
             }
         } catch (err: any) {
-            console.log(err?.response?.data?.message);
             console.log(err);
             if(err?.response?.data?.message === 'Forbidden resource'){
                 console.log('Please login again!');
@@ -118,25 +117,6 @@ const CreateContact = ({ handleClose, open, refresh }: ICreateContact) => {
                 });
             }
         }
-
-            // const res = await axios.post(`${config.API_URL}/auth/signup`, { ...data });
-            // console.log(res?.data);
-            // if(res?.data?.status){
-            //     toast.success(res.data.message, {
-            //         position: "top-center",
-            //         autoClose: 5000,
-            //         hideProgressBar: false,
-            //         closeOnClick: true,
-            //         pauseOnHover: true,
-            //         progress: undefined,
-            //         theme: "light",
-            //     });
-            //     const token = res.data.token;
-            //     localStorage.setItem('token', token);
-            //     setTimeout(() => {
-            //         router.push('/');
-            //     }, 2000)
-            // }
     }
   
 

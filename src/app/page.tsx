@@ -6,6 +6,7 @@ import { config } from '@/config/config';
 import { Box, Container, Pagination, Stack, Typography } from '@mui/material'
 import axios from 'axios';
 import { ChangeEvent, useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 
 export interface IContact {
   id: number;
@@ -17,6 +18,7 @@ export interface IContact {
   isBookmarked: boolean;
   index: number;
   refresh: () => void;
+  bookmarkHandler: (id: number, isBookmark: boolean) => void;
 }
 
 export default function Home() {
@@ -53,6 +55,42 @@ export default function Home() {
     }
   }
 
+  const bookmarkHandler = async (id: number, isBookmark: boolean) => {
+    try {
+      const token = localStorage.getItem('token') || 'token';
+      const res = await axios.patch(`${config.API_URL}/phonebook/bookmark/${id}`,{
+        isBookmarked: isBookmark
+      },{
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      })
+      console.log(res);
+      if(res?.data?.status){
+          toast.success(res.data.message, {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              progress: undefined,
+              theme: "light",
+          });
+          
+          refresh();
+          setTimeout(() => {
+              handleClose();
+          }, 2000);
+      }
+    } catch (err: any) {
+      console.log(err);
+      if(err?.response?.data?.message === 'Forbidden resource'){
+          console.log('Please login again!');
+          return;
+      }
+    }
+  }
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -69,10 +107,12 @@ export default function Home() {
     fetchContacts(curPage);
     setPage(curPage);
   }
+
   return (
     <Box>
         <Navbar handleClickOpen={handleClickOpen} />
         <CreateContact handleClose={handleClose} refresh={ refresh } open={open} />
+        <ToastContainer />
         <Container maxWidth="lg" sx={{ my: "90px"}}>
             <Box display="grid" gridTemplateColumns="1fr 1fr">
               <Typography color="#545252">Name</Typography>
@@ -85,7 +125,7 @@ export default function Home() {
               <Stack spacing={2}>
                 { !contacts.length ? <h1>No contacts</h1> : (
                   contacts.map((contact, i) => {
-                    return <IndividualContact key={contact.id} { ...contact } index={ i } refresh={refresh} />
+                    return <IndividualContact key={contact.id} { ...contact } index={ i } refresh={refresh} bookmarkHandler={bookmarkHandler} />
                   })
                   )}
               </Stack>
