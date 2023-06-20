@@ -5,6 +5,8 @@ import BookmarkAddedOutlinedIcon from '@mui/icons-material/BookmarkAddedOutlined
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from "react";
+import { config } from "@/config/config";
+import EditContact from "./EditContact";
 
 interface IGenerateImage {
     avatar: string | null;
@@ -13,7 +15,7 @@ interface IGenerateImage {
 }
 
 const GenerateImage = ({ avatar, name, ind}: IGenerateImage) => {
-    const url = avatar && `http://localhost:3001/web/${avatar.split('/').pop()}`;
+    const url = avatar && `${config.API_URL}/web/${avatar.split('/').pop()}`;
     if(url){
         return (
             <Box width={43} height={43} borderRadius="50%" overflow="hidden"
@@ -64,11 +66,25 @@ const GenerateImage = ({ avatar, name, ind}: IGenerateImage) => {
     }
 }
 
-const IndividualContact = ({ name, avatar_url, phone, isBookmarked, index } : IContact) => {
+const IndividualContact = ( props : IContact) => {
+    const { name, avatar_url, phone, isBookmarked, index, refresh } = props;
+
     const [ show, setShow ] = useState(false);
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+      setShow(false);
+    };
+
     const handleShow = (val: boolean) => {
         setShow(val);
     }
+
     return (
         <Box display="grid" gridTemplateColumns="1fr 1fr" alignItems="center"
             borderBottom="1px solid rgba(0, 0, 0, 0.2)" py={1} px={4} 
@@ -83,6 +99,7 @@ const IndividualContact = ({ name, avatar_url, phone, isBookmarked, index } : IC
             <Box display="flex" alignItems="center" gap={5}>
                 <GenerateImage avatar={ avatar_url} name={ name } ind={index} />
                 <Typography fontSize="18px">{ name }</Typography>
+                { open && <EditContact open={open} handleClose={handleClose} {...props} refresh={refresh} /> }
             </Box>
 
             <Box display="flex" justifyContent="space-between">
@@ -108,11 +125,13 @@ const IndividualContact = ({ name, avatar_url, phone, isBookmarked, index } : IC
                     </Box>
                     <Box display="flex" gap={2}>
                         <EditOutlinedIcon sx={{ 
-                            cursor: 'pointer',
-                            "&:hover": {
-                                color: '#2ebd2a'
-                            }
-                        }}/>
+                                cursor: 'pointer',
+                                "&:hover": {
+                                    color: '#2ebd2a'
+                                }
+                            }}
+                            onClick={ handleClickOpen }
+                        />
                         <DeleteIcon sx={{ 
                             cursor: 'pointer',
                             "&:hover": {

@@ -16,6 +16,7 @@ export interface IContact {
   label: string;
   isBookmarked: boolean;
   index: number;
+  refresh: () => void;
 }
 
 export default function Home() {
@@ -27,10 +28,12 @@ export default function Home() {
   const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
-    fetchContacts();
+    fetchContacts(page);
   }, [load])
 
   const fetchContacts = async (count: number = 0) => {
+    count = count ? count-1 : 0;
+    console.log(count);
     try {
       const token = localStorage.getItem('token') || 'token';
       const res = await axios.get(`${config.API_URL}/phonebook?skip=${count * 10}`, {
@@ -63,8 +66,7 @@ export default function Home() {
   }
 
   const pageChangeHandler = (curPage: number) => {
-    console.log(curPage)
-    fetchContacts(curPage-1);
+    fetchContacts(curPage);
     setPage(curPage);
   }
   return (
@@ -83,7 +85,7 @@ export default function Home() {
               <Stack spacing={2}>
                 { !contacts.length ? <h1>No contacts</h1> : (
                   contacts.map((contact, i) => {
-                    return <IndividualContact key={contact.id} { ...contact } index={ i } />
+                    return <IndividualContact key={contact.id} { ...contact } index={ i } refresh={refresh} />
                   })
                   )}
               </Stack>
