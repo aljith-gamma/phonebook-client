@@ -126,7 +126,7 @@ const EditContact = (props: IEditContact) => {
 
   return (
     <div>
-        <Dialog open={open} onClose={closeHandler} >
+        <Dialog open={open} onClose={closeHandler} onClick={(e) => e.stopPropagation()} >
             <ToastContainer />
             <Box sx={{ width: "600px"}}>
                 <DialogTitle fontSize="28px" textAlign="center">Edit contact</DialogTitle>

@@ -4,7 +4,7 @@ import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined';
 import BookmarkAddedOutlinedIcon from '@mui/icons-material/BookmarkAddedOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { config } from "@/config/config";
 import EditContact from "./EditContact";
 import DialogBox from "./DialogBox";
@@ -79,7 +79,7 @@ const IndividualContact = ( props : IContact) => {
     const router = useRouter();
 
     const handleClickOpen = () => {
-      setOpen(true);
+        setOpen(true);
     };
   
     const handleClose = () => {
@@ -177,20 +177,26 @@ const IndividualContact = ( props : IContact) => {
                     <Box>
                         { isBookmarked ? 
                             <BookmarkAddedOutlinedIcon sx={{ 
-                                cursor: 'pointer',
-                                "&:hover": {
-                                    color: '#4287f5'
-                                }
-                            }}
-                            onClick={ changeBookmark }
+                                    cursor: 'pointer',
+                                    "&:hover": {
+                                        color: '#4287f5'
+                                    }
+                                }}
+                                onClick={ (e) => {
+                                    e.stopPropagation();
+                                    changeBookmark();
+                                } }
                             /> : 
                             <BookmarkAddOutlinedIcon sx={{ 
-                                cursor: 'pointer',
-                                "&:hover": {
-                                    color: '#4287f5'
-                                }
-                            }}
-                            onClick={ changeBookmark }
+                                    cursor: 'pointer',
+                                    "&:hover": {
+                                        color: '#4287f5'
+                                    }
+                                }}
+                                onClick={ (e) => {
+                                    e.stopPropagation();
+                                    changeBookmark();
+                                } }
                             /> 
                         }
                     </Box>
@@ -201,15 +207,21 @@ const IndividualContact = ( props : IContact) => {
                                     color: '#2ebd2a'
                                 }
                             }}
-                            onClick={ handleClickOpen }
+                            onClick={ (e) => {
+                                e.stopPropagation();
+                                handleClickOpen();
+                            } }
                         />
                         <DeleteIcon sx={{ 
-                            cursor: 'pointer',
-                            "&:hover": {
-                                color: 'red'
-                            }
-                        }}
-                        onClick={ dialogBoxOpen }
+                                cursor: 'pointer',
+                                "&:hover": {
+                                    color: 'red'
+                                }
+                            }}
+                            onClick={ (e) => {
+                                e.stopPropagation();
+                                dialogBoxOpen();
+                            } }
                         /> 
                     </Box> 
                 </Box> }  

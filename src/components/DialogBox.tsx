@@ -21,8 +21,14 @@ const DialogBox = ({ open, handleClose, message, color, btnText, agreeHandler}: 
             { message }
           </DialogTitle>
           <Box display="flex" justifyContent="center" gap={2}>
-            <Button onClick={handleClose} variant="outlined" size="large"> cancel </Button>
-            <Button onClick={agreeHandler} variant="contained" color={color} size="large"> { btnText } </Button>
+            <Button onClick={(e) => {
+              e.stopPropagation();
+              handleClose();
+            }} variant="outlined" size="large"> cancel </Button>
+            <Button onClick={(e) => {
+              e.stopPropagation();
+              agreeHandler();
+            }} variant="contained" color={color} size="large"> { btnText } </Button>
           </Box>
         </Box>
       </Dialog>
