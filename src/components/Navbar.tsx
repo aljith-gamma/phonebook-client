@@ -8,10 +8,11 @@ import DialogBox from "./DialogBox";
 
 interface INavbar {
     handleClickOpen: () => void;
-    fetchContacts: (count: number, q?: string, f?: string) => void
+    fetchContacts: (count: number, q?: string, f?: string) => void,
+    refresh: () => void
 }
 
-const Navbar = ({ handleClickOpen, fetchContacts }: INavbar) => {
+const Navbar = ({ handleClickOpen, fetchContacts, refresh }: INavbar) => {
     const [query, setQuery] = useState('');
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [filter, setFilter] = useState('');
@@ -61,6 +62,7 @@ const Navbar = ({ handleClickOpen, fetchContacts }: INavbar) => {
     const logoutUser = () => {
         localStorage.clear();
         setOpenDialog(false);
+        refresh();
     }
 
     return (

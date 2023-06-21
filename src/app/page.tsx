@@ -2,6 +2,7 @@
 import CreateContact from '@/components/CreateContact'
 import IndividualContact from '@/components/IndividualContact';
 import Navbar from '@/components/Navbar'
+import PrivateRouter from '@/components/PrivateRouter';
 import { config } from '@/config/config';
 import { Box, Container, Pagination, Stack, Typography } from '@mui/material'
 import axios from 'axios';
@@ -113,8 +114,9 @@ export default function Home() {
   }
 
   return (
-    <Box>
-        <Navbar handleClickOpen={handleClickOpen} fetchContacts={fetchContacts} />
+    <PrivateRouter>
+      <Box>
+        <Navbar handleClickOpen={handleClickOpen} fetchContacts={fetchContacts} refresh={refresh} />
         <CreateContact handleClose={handleClose} refresh={ refresh } open={open} />
         <ToastContainer />
         <Container maxWidth="lg" sx={{ my: "90px"}}>
@@ -143,6 +145,7 @@ export default function Home() {
               /> : <span></span>}
             </Box>
         </Container>
-    </Box>
+      </Box>
+    </PrivateRouter>
   )
 }

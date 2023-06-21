@@ -1,4 +1,5 @@
 "use client"
+import PrivateRouter from "@/components/PrivateRouter";
 import { config } from "@/config/config";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import axios from "axios";
@@ -97,32 +98,34 @@ const IndividualContactPage = ({ params: { id } }: any) => {
     }
 
     return (
-        <Container>
-            <Box  m={14} >
-                <Typography fontSize="32px" textAlign="center">Contact Details</Typography>
-                <Box bgcolor="#eddedd" p={6} display="grid" gridTemplateColumns="1fr 3fr"
-                    gap={6} mt={6}
-                >
+        <PrivateRouter>
+            <Container>
+                <Box  m={14} >
+                    <Typography fontSize="32px" textAlign="center">Contact Details</Typography>
+                    <Box bgcolor="#eddedd" p={6} display="grid" gridTemplateColumns="1fr 3fr"
+                        gap={6} mt={6}
+                    >
 
-                    <Box>
-                        <Box display="flex" flexDirection="column" gap={5}
-                            justifyContent="center" alignItems="center"
-                        >
-                            { contact && <GenerateImage { ...contact } /> }
+                        <Box>
+                            <Box display="flex" flexDirection="column" gap={5}
+                                justifyContent="center" alignItems="center"
+                            >
+                                { contact && <GenerateImage { ...contact } /> }
+                            </Box>
+                        </Box>
+
+                        <Box display="flex" alignItems="center">
+                            <Stack spacing={2}>
+                                <Typography fontSize="20px"><span style={spanStyle}>Name: </span> { contact && contact.name }</Typography>
+                                <Typography fontSize="20px"><span style={spanStyle}>Phone:  </span>{ contact && contact.phone }</Typography>
+                                <Typography fontSize="20px"><span style={spanStyle}>Address:  </span>{ contact && contact.address }</Typography>
+                                <Typography fontSize="20px"><span style={spanStyle}>Label:  </span>{ contact && contact.label }</Typography>
+                            </Stack>
                         </Box>
                     </Box>
-
-                    <Box display="flex" alignItems="center">
-                        <Stack spacing={2}>
-                            <Typography fontSize="20px"><span style={spanStyle}>Name: </span> { contact && contact.name }</Typography>
-                            <Typography fontSize="20px"><span style={spanStyle}>Phone:  </span>{ contact && contact.phone }</Typography>
-                            <Typography fontSize="20px"><span style={spanStyle}>Address:  </span>{ contact && contact.address }</Typography>
-                            <Typography fontSize="20px"><span style={spanStyle}>Label:  </span>{ contact && contact.label }</Typography>
-                        </Stack>
-                    </Box>
                 </Box>
-            </Box>
-        </Container>
+            </Container>
+        </PrivateRouter>
     )
 }
 
