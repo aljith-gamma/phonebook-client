@@ -173,7 +173,7 @@ const IndividualContact = ( props : IContact) => {
                 <Box>
                     <Typography>{ phone }</Typography>
                 </Box>
-                { show && <Box display="flex" alignItems="center" gap={5}>
+                <Box display="flex"  gap={5}>
                     <Box>
                         { isBookmarked ? 
                             <BookmarkAddedOutlinedIcon sx={{ 
@@ -200,7 +200,7 @@ const IndividualContact = ( props : IContact) => {
                             /> 
                         }
                     </Box>
-                    <Box display="flex" gap={2}>
+                    <Box display="flex" gap={2} visibility={show ? 'visible' : 'hidden'}>
                         <EditOutlinedIcon sx={{ 
                                 cursor: 'pointer',
                                 "&:hover": {
@@ -224,7 +224,7 @@ const IndividualContact = ( props : IContact) => {
                             } }
                         /> 
                     </Box> 
-                </Box> }  
+                </Box> 
             </Box>
             <ToastContainer />
         </Box>
