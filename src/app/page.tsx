@@ -33,12 +33,12 @@ export default function Home() {
     fetchContacts(page);
   }, [load])
 
-  const fetchContacts = async (count: number = 0) => {
+  const fetchContacts = async (count: number = 0, q?: string) => {
     count = count ? count-1 : 0;
-    console.log(count);
     try {
       const token = localStorage.getItem('token') || 'token';
-      const res = await axios.get(`${config.API_URL}/phonebook?skip=${count * 10}`, {
+      const queryString = q ? `skip=${count * 10}&q=${q}` : `skip=${count * 10}`;
+      const res = await axios.get(`${config.API_URL}/phonebook?${queryString}`, {
         headers: {
           "Authorization": token
         }
@@ -112,7 +112,7 @@ export default function Home() {
 
   return (
     <Box>
-        <Navbar handleClickOpen={handleClickOpen} />
+        <Navbar handleClickOpen={handleClickOpen} fetchContacts={fetchContacts} />
         <CreateContact handleClose={handleClose} refresh={ refresh } open={open} />
         <ToastContainer />
         <Container maxWidth="lg" sx={{ my: "90px"}}>
@@ -134,11 +134,11 @@ export default function Home() {
             </Box>
 
             <Box mt={5} display="flex" justifyContent="center">
-              <Pagination count={ totalPage } page={ page } color="secondary" 
+              {contacts.length ? <Pagination count={ totalPage } page={ page } color="secondary" 
                 onChange={(e: ChangeEvent<unknown>, curPage: number) => {
                   pageChangeHandler(curPage);
                 }}
-              />
+              /> : <span></span>}
             </Box>
         </Container>
     </Box>

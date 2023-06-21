@@ -3,12 +3,29 @@ import Person2Icon from '@mui/icons-material/Person2';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import AddIcon from '@mui/icons-material/Add';
+import { ChangeEvent, useRef, useState } from "react";
 
 interface INavbar {
-    handleClickOpen: () => void
+    handleClickOpen: () => void;
+    fetchContacts: (count: number, q?: string) => void
 }
 
-const Navbar = ({ handleClickOpen }: INavbar) => {
+const Navbar = ({ handleClickOpen, fetchContacts }: INavbar) => {
+    const [query, setQuery] = useState('');
+    const timeoutId = useRef<any>(null);
+
+    const handleQueryChange = (e: ChangeEvent<HTMLInputElement>) => {
+        let q = e.target.value;
+        setQuery(q);
+        timeoutId.current && clearTimeout(timeoutId.current);
+        timeoutId.current = setTimeout(() => {
+            debounce(q);
+        }, 1000);
+    }
+
+    const debounce = (q: string) => {
+        fetchContacts(0, q);
+    }
     return (
         <Box  boxShadow="0px 13px 10px -15px #111" position="fixed" top="0" width="100%" zIndex="10"
             bgcolor="white"
@@ -41,6 +58,7 @@ const Navbar = ({ handleClickOpen }: INavbar) => {
                                 <SearchIcon />
                                 </InputAdornment>
                             }
+                            onChange={ handleQueryChange }
                         />
                     </Box>
                 </Box>

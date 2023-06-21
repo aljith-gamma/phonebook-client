@@ -85,9 +85,7 @@ const CreateContact = ({ handleClose, open, refresh }: ICreateContact) => {
                 });
                 
                 refresh();
-                setTimeout(() => {
-                    handleClose();
-                }, 2000);
+                handleClose();
             }else {
                 toast.warning(res.data.message, {
                     position: "top-center",
