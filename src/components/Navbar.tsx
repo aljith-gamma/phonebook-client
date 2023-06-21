@@ -4,6 +4,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import { ChangeEvent, useRef, useState } from "react";
+import DialogBox from "./DialogBox";
 
 interface INavbar {
     handleClickOpen: () => void;
@@ -14,6 +15,7 @@ const Navbar = ({ handleClickOpen, fetchContacts }: INavbar) => {
     const [query, setQuery] = useState('');
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [filter, setFilter] = useState('');
+    const [openDialog, setOpenDialog] = useState(false);
     const timeoutId = useRef<any>(null);
 
     const open = Boolean(anchorEl);
@@ -48,11 +50,27 @@ const Navbar = ({ handleClickOpen, fetchContacts }: INavbar) => {
         fetchContacts(0, q);
     }
 
+    const handleDialogBox = () => {
+        setOpenDialog(false);
+    }
+
+    const opendDialogBox = () => {
+        setOpenDialog(true);
+    }
+
+    const logoutUser = () => {
+        localStorage.clear();
+        setOpenDialog(false);
+    }
+
     return (
         <Box  boxShadow="0px 13px 10px -15px #111" position="fixed" top="0" width="100%" zIndex="10"
             bgcolor="white"
         >
-            
+            <DialogBox open={ openDialog } handleClose={handleDialogBox} 
+                message="Do you really want to logout?" color="error" btnText="Logout"
+                agreeHandler={ logoutUser }
+            />
             <Box p="10px 70px" display="flex" 
                 justifyContent="space-between"
             >
@@ -130,6 +148,12 @@ const Navbar = ({ handleClickOpen, fetchContacts }: INavbar) => {
                             Create contact
                         </Button>
                     </Box>
+
+                    <Button variant="contained" color='error' sx={{ fontWeight: '600'}}
+                        onClick={ opendDialogBox }
+                    >
+                        Logout
+                    </Button>
                 </Box>
             </Box>
         </Box>

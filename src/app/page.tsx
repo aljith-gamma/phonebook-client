@@ -46,7 +46,7 @@ export default function Home() {
         }
       })
       if(res?.data?.status){
-        console.log(res.data.data);
+        // console.log(res.data.data);
         setContacts(res.data.data);
         const count = Math.floor((res.data.count/10)) + 1
         setTotalPage(count);
