@@ -33,11 +33,13 @@ export default function Home() {
     fetchContacts(page);
   }, [load])
 
-  const fetchContacts = async (count: number = 0, q?: string) => {
+  const fetchContacts = async (count: number = 0, q?: string, filter?: string) => {
     count = count ? count-1 : 0;
     try {
       const token = localStorage.getItem('token') || 'token';
-      const queryString = q ? `skip=${count * 10}&q=${q}` : `skip=${count * 10}`;
+      let queryString = q ? `skip=${count * 10}&q=${q}` : `skip=${count * 10}`;
+      queryString = filter ? `${queryString}&filterBy=${filter}` : queryString;
+
       const res = await axios.get(`${config.API_URL}/phonebook?${queryString}`, {
         headers: {
           "Authorization": token
